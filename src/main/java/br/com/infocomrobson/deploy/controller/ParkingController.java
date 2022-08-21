@@ -1,17 +1,23 @@
 package br.com.infocomrobson.deploy.controller;
 
 import br.com.infocomrobson.deploy.controller.mapper.ParkingMapper;
+import br.com.infocomrobson.deploy.dto.ParkingCreateDTO;
 import br.com.infocomrobson.deploy.dto.ParkingDTO;
 import br.com.infocomrobson.deploy.model.Parking;
 import br.com.infocomrobson.deploy.service.ParkingService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/parking")
+@EnableWebMvc
+@Api(tags = "Controles da API")
 public class ParkingController {
 
     private final ParkingService parkingService;
@@ -24,22 +30,37 @@ public class ParkingController {
 
 
     @GetMapping("/")
-    public List<ParkingDTO> findAll(){
-//        List<ParkingDTO> parkingDTOList = new ArrayList<>();
+    @ApiOperation("Procurar todos os parkings")
+    public ResponseEntity<List<ParkingDTO>> findAll(){
         List<Parking> parkingList = parkingService.findAll();
         List<ParkingDTO> result = parkingMapper.toParkingDTOList(parkingList);
-//        for (Parking parking : parkingList) {
-//            ParkingDTO dto = new ParkingDTO();
-//            dto.setId(parking.getId());
-//            dto.setLicense(parking.getLicense());
-//            dto.setModel(parking.getModel());
-//            dto.setBill(parking.getBill());
-//            dto.setColor(parking.getColor());
-//            dto.setEntryDate(parking.getEntryDate());
-//            dto.setExitDate(parking.getExitDate());
-//            dto.setState(parking.getState());
-//            parkingDTOList.add(dto);
-//        }
-        return result;
+        return ResponseEntity.ok(result);
     }
+
+
+    @GetMapping("/{id}")
+    @ApiOperation("Procurar um parking específico")
+    public ResponseEntity<ParkingDTO> findById(@PathVariable String id){
+        Parking parking = parkingService.findById(id);
+        ParkingDTO result = parkingMapper.parkingDTO(parking);
+        return ResponseEntity.ok(result);
+    }
+
+
+    @PostMapping("/create")
+    @ApiOperation("Criar um parking")
+    public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDTO parkingCreateDTO){
+        Parking parkingCreate = parkingMapper.parkingCreateDtoToParking(parkingCreateDTO);
+        Parking parking = parkingService.create(parkingCreate);
+        ParkingDTO result = parkingMapper.parkingDTO(parking);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
+
+//    @GetMapping("/")
+//    public List<ParkingDTO> findAll(){
+//        List<Parking> parkingList = parkingService.findAll();
+//        List<ParkingDTO> result = parkingMapper.toParkingDTOList(parkingList);
+//        return result;
+//    }
 }

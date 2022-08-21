@@ -1,5 +1,6 @@
 package br.com.infocomrobson.deploy.controller.mapper;
 
+import br.com.infocomrobson.deploy.dto.ParkingCreateDTO;
 import br.com.infocomrobson.deploy.dto.ParkingDTO;
 import br.com.infocomrobson.deploy.model.Parking;
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,10 @@ public class ParkingMapper {
 
     public ParkingDTO parkingDTO(Parking parking){
         return MODEL_MAPPER.map(parking, ParkingDTO.class);
+    }
+
+    public Parking parkingCreateDtoToParking(ParkingCreateDTO parkingCreateDTO){
+        return MODEL_MAPPER.map(parkingCreateDTO, Parking.class);
     }
 
     public List<ParkingDTO> toParkingDTOList(List<Parking> parkingList) {
