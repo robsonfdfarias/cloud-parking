@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/parking")
@@ -38,7 +39,7 @@ public class ParkingController {
 
     @GetMapping("/{id}")
     @ApiOperation("Procurar um parking específico")
-    public ResponseEntity<ParkingDTO> findById(@PathVariable String id){
+    public ResponseEntity<ParkingDTO> findById(@PathVariable Long id){
         Parking parking = parkingService.findById(id);
 
         ParkingDTO result = parkingMapper.parkingDTO(parking);
@@ -56,14 +57,14 @@ public class ParkingController {
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation("Deletar um parking")
-    public ResponseEntity delete(@PathVariable String id){
+    public ResponseEntity delete(@PathVariable Long id){
         parkingService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/update/{id}")
     @ApiOperation("Atualizar um parking")
-    public ResponseEntity<ParkingDTO> update(@PathVariable String id, @RequestBody ParkingCreateDTO parkingCreateDTO){
+    public ResponseEntity<ParkingDTO> update(@PathVariable Long id, @RequestBody ParkingCreateDTO parkingCreateDTO){
         Parking parkingCreate = parkingMapper.parkingCreateDtoToParking(parkingCreateDTO);
         Parking parking = parkingService.update(id, parkingCreate);
         ParkingDTO result = parkingMapper.parkingDTO(parking);
@@ -72,7 +73,7 @@ public class ParkingController {
 
     @PostMapping("/exit/{id}")
     @ApiOperation("Calcular valor para saída do carro")
-    public ResponseEntity<ParkingDTO> exit(@PathVariable String id){
+    public ResponseEntity<ParkingDTO> exit(@PathVariable Long id){
         Parking parking = parkingService.exit(id);
         ParkingDTO result = parkingMapper.parkingDTO(parking);
         return ResponseEntity.status(HttpStatus.OK).body(result);

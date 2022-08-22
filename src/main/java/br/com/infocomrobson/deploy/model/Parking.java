@@ -1,9 +1,14 @@
 package br.com.infocomrobson.deploy.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "tb_parking")
 public class Parking {
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String license;
     private String state;
     private String model;
@@ -15,7 +20,7 @@ public class Parking {
     public Parking() {
     }
 
-    public Parking(String id, String license, String state, String model, String color) {
+    public Parking(Long id, String license, String state, String model, String color) {
         this.id = id;
         this.license = license;
         this.state = state;
@@ -23,11 +28,11 @@ public class Parking {
         this.color = color;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
